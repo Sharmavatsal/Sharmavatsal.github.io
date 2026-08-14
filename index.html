@@ -755,6 +755,14 @@
         .footer-text span {
             color: var(--cyan);
         }
+        .footer-phone {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        .footer-phone:hover {
+            color: var(--cyan);
+        }
 
         /* ---- Reveal on scroll ---- */
         .reveal {
@@ -836,7 +844,7 @@
                 <div class="hero-buttons">
                     <a href="#projects" class="cta-btn">View my work</a>
                     <a href="https://github.com/Sharmavatsal" target="_blank" rel="noopener" class="cta-btn cta-btn-secondary">GitHub</a>
-                    <a href="mailto:sharmavatsal144@gmail.com" class="cta-btn cta-btn-secondary">Contact me</a>
+                    <a href="mailto:sharmavatsal144@gmail.com" class="cta-btn cta-btn-secondary email-link">Contact me</a>
                 </div>
             </div>
             <div class="scroll-hint">Scroll</div>
@@ -878,7 +886,7 @@
                     </div>
                     <div class="flip-card-back">
                         <div class="contact-links">
-                            <a href="mailto:sharmavatsal144@gmail.com">✉️ sharmavatsal144@gmail.com</a>
+                            <a href="mailto:sharmavatsal144@gmail.com" class="email-link">✉️ sharmavatsal144@gmail.com</a>
                             <a href="tel:+919099287713">📱 +91 90992 87713</a>
                             <a href="https://github.com/Sharmavatsal" target="_blank" rel="noopener">🐙 GitHub — @Sharmavatsal</a>
                             <a href="https://linkedin.com/in/vatsal-sharma-166267297/" target="_blank" rel="noopener">💼 LinkedIn — Vatsal Sharma</a>
@@ -1026,7 +1034,7 @@
             <h2 class="section-title">Let's Connect</h2>
             <p class="contact-intro">I'm actively looking for internship and full-time opportunities. Let's discuss how I can contribute to your team.</p>
             <div class="contact-buttons">
-                <a href="mailto:sharmavatsal144@gmail.com" class="cta-btn">Send Email</a>
+                <a href="mailto:sharmavatsal144@gmail.com" class="cta-btn email-link">Send Email</a>
                 <a href="https://linkedin.com/in/vatsal-sharma-166267297/" target="_blank" rel="noopener" class="cta-btn cta-btn-secondary">LinkedIn</a>
                 <a href="https://github.com/Sharmavatsal" target="_blank" rel="noopener" class="cta-btn cta-btn-secondary">GitHub</a>
             </div>
@@ -1039,9 +1047,10 @@
                 <a href="#projects">Projects</a>
                 <a href="#skills">Skills</a>
                 <a href="#experience">Experience</a>
-                <a href="mailto:sharmavatsal144@gmail.com">Email</a>
+                <a href="mailto:sharmavatsal144@gmail.com" class="email-link">Email</a>
+                <a href="tel:+919099287713">Phone</a>
             </div>
-            <p class="footer-text">© 2026 <span>Vatsal Sharma</span> · Built with attention to detail</p>
+            <p class="footer-text">© 2026 <span>Vatsal Sharma</span> · <a href="tel:+919099287713" class="footer-phone">+91 90992 87713</a> · Built with attention to detail</p>
         </div>
     </footer>
 
@@ -1151,6 +1160,12 @@
             });
         });
 
+        // ---- Email links: prefill recipient, subject and body ----
+        const EMAIL_ADDRESS = 'sharmavatsal144@gmail.com';
+        document.querySelectorAll('.email-link').forEach(link => {
+            link.href = `mailto:${EMAIL_ADDRESS}?subject=${encodeURIComponent('Contact from your Portfolio')}&body=${encodeURIComponent('Hi Vatsal,\n\nI came across your portfolio and would like to get in touch.\n\n')}`;
+        });
+
         // ---- Nav active link + shrink on scroll ----
         const nav = document.getElementById('nav');
         window.addEventListener('scroll', () => {
@@ -1163,14 +1178,21 @@
             let current = '';
             sections.forEach(section => {
                 const top = section.offsetTop;
-                if (window.pageYOffset >= top - 260) current = section.id;
+                if (window.scrollY >= top - 300) current = section.id;
             });
+
+            // When at the very bottom, force the last section (Contact) active
+            if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 80) {
+                const last = sections[sections.length - 1];
+                if (last) current = last.id;
+            }
 
             navLinks.forEach(link => {
                 const targetId = link.getAttribute('href').slice(1);
                 link.classList.toggle('active', targetId === current);
             });
         });
+        window.dispatchEvent(new Event('scroll'));
 
         // ---- Reveal on scroll ----
         const observer = new IntersectionObserver(entries => {
